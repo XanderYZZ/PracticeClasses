@@ -138,4 +138,76 @@ void RemoveVowelsFromFile(std::string file_name) {
     ofile << output;
 }
 
+struct Person {
+    Person() {};
+    Person(const std::string &first_name, const std::string &second_name, const int &age) {
+        if (age < 0 || age >= 150) {
+            throw std::runtime_error("NO!");
+        }
+
+        auto CheckStr = [&](const std::string &str) {
+            for (const char &c : str) {
+                if (!std::isalnum(c)) {
+                    throw std::runtime_error("NO!");
+                }
+            }
+        };
+
+        CheckStr(first_name);
+        CheckStr(second_name);
+
+        this->first_name = first_name;
+        this->second_name = second_name;
+        this->age = age;
+    }
+
+    std::string GetFirstName() const { return first_name; }
+    std::string GetSecondName() const { return second_name; }
+    int GetAge() const { return age; }
+
+private:
+    std::string first_name;
+    std::string second_name;
+    int age;
+};
+
+std::istream &operator>>(std::istream &is, Person &p) {
+    std::string first_name, second_name;
+    int age;
+    std::cout << "Enter first name: ";
+
+    if (!(is >> first_name)) { return is; }
+
+    std::cout << "Enter second name: ";
+
+    if (!(is >> second_name)) { return is; }
+
+    std::cout << "Enter age: ";
+
+    if (!(is >> age)) { return is; }
+
+    p = Person{first_name, second_name, age};
+
+    return is;
+}
+
+std::ostream &operator<<(std::ostream &os, Person p) {
+    return os << "Name: " << p.GetFirstName() << " " << p.GetSecondName() << ", Age: " << p.GetAge() << "\n";
+}
+
+void PersonTest() {
+    Person p = {"Goofy", "Dog", 63};
+    std::cout << p << "\n";
+    std::vector<Person> people;
+    for (int i = 0; i < 3; i++) {
+        Person n;
+        std::cin >> n;
+        people.push_back(n);
+    }
+
+    for (const Person &p : people) {
+        std::cout << p;
+    }
+}
+
 #endif 
